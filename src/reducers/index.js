@@ -1,6 +1,6 @@
 import {ADD_REMINDER} from '../constants';
 
-const remider = (action) => {
+const reminder = (action) => {
   return{
     text:action.text,
     id: Math.random()
@@ -13,7 +13,6 @@ const reminders = (state = [], action) => {
     case ADD_REMINDER:
       reminders = [...state, reminder(action)];
       console.log('remider as state', reminders);
-
       return reminders;
     default:
       return state;
