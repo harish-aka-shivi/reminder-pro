@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {addReminder} from '../actions';
+import {addReminder, deleteReminder} from '../actions';
 
 class App extends Component {
   constructor(props) {
+    console.log('props in constructor ',props);
     super(props);
     this.state = {
       text:''
@@ -12,8 +13,38 @@ class App extends Component {
   }
 
   addReminder() {
-    console.log('this',this);
+    console.log('this in addReminder',this);
+    console.log('props in addReminder are ', this.props);
     this.props.addReminder(this.state.text);
+  }
+
+  deleteReminder(id) {
+    console.log("deleting the reminder, value is ", id);
+    console.log('props in delete reminder are ', this.props);
+  }
+
+  renderReminders() {
+    const { reminders } = this.props;
+    console.log('reminders in renderReminders is ', reminders);
+    return (
+
+      <ul className="list-group col-sm-4">
+        {
+          reminders.map(reminder => {
+            return (
+              <li key={reminder.id} className="list-group-item">
+                <div className = "list-item">{reminder.text}</div>
+                <div
+                  className = "list-item delete-button"
+                  onClick = {() => this.deleteReminder(reminder.id)}>&#x2715;</div>
+              </li>
+            )
+          })
+        }
+
+      </ul>
+
+    )
   }
 
   render() {
@@ -22,7 +53,7 @@ class App extends Component {
         <div className = "title">
           Reminder Pro
         </div>
-        <div className= "form-inline">
+        <div className= "form-inline reminder-form">
           <div className= "form-group">
             <input
               className= "form-control"
@@ -30,15 +61,15 @@ class App extends Component {
               onChange = {event => this.setState({text:event.target.value})}
             />
           </div>
+          <button
+            type="button"
+            className = "btn btn-success"
+            onClick = {() => this.addReminder()}
+            >
+            Add Reminder
+          </button>
         </div>
-        <button
-          type="button"
-          className = "btn btn-success"
-          onClick = {() => this.addReminder()}
-        >
-          Add Reminder
-        </button>
-
+        {this.renderReminders()}
       </div>
     )
   }
@@ -46,11 +77,18 @@ class App extends Component {
 
 function mapStateToProps(state) {
   console.log("mapStateToProps , state is ->", state);
+  return {
+    reminders:state
+  }
 }
 
 function mapDispatchToProps(dispatch) {
   console.log("mapDispatchToProps, dispatch is " , dispatch);
-  return bindActionCreators({addReminder}, dispatch)
+  console.log("add reminder is ", addReminder);
+  console.log("deleteReminder is ", deleteReminder);
+  return bindActionCreators({addReminder, deleteReminder}, dispatch)
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);
+// or in es6 we can also write
+//export default connect(mapStateToProps,{addReminder, deleteReminder})(App);

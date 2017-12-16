@@ -12,7 +12,7 @@ const reminders = (state = [], action) => {
   switch (action.type) {
     case ADD_REMINDER:
       reminders = [...state, reminder(action)];
-      console.log('remider as state', reminders);
+      console.log('reminder as state in reducers', reminders);
       return reminders;
     default:
       return state;
